@@ -9,12 +9,14 @@ import BasicStats as b
 import CommandLinePlot as c
 import DocumentStreamError as ds
 
+
 def main():
 
     file = input('Please enter a file: ' )
     try:
         #converts the file into a document object
         doc = d.Document(file)
+        doc.generateWhole()
     
         words = []
         #makes a new list of all of the words in the file, removing any
@@ -33,6 +35,7 @@ def main():
         stats = b.BasicStats()
         stats.dic = b.BasicStats.createFreqMap(words)
         top = stats.topN(10)
+        print(top)
 
         #makes a list of the number of times each of the top 10 words is used
         num = []
@@ -45,6 +48,7 @@ def main():
         num.sort(reverse = True)
         plt = c.CommandLinePlotter()
         plt.twoDScatter(num)
+        plt.barGraph(num)
 
         #makes a list of tuples of the words and their length
         wordList = []

@@ -27,7 +27,7 @@ class Document:
         self.fileName = fileName
         Document.count += 1
         self.__refNum = Document.count
-        self.__sentences = self.generateWhole()
+        self.__sentences = []
         self.__wordCnt = 0
         self.__charCnt = 0
         self.__lineCnt = 0
@@ -37,7 +37,8 @@ class Document:
     #is then used in the initialization to set the variable
     #self.__sentences
     def generateWhole(self):
-        return d.DocumentStream(self.fileName).readWhole()
+        sent = d.DocumentStream(self.fileName).readWhole()
+        self.__sentences = sent
     
     #getter for __sentences
     def getSentences(self):

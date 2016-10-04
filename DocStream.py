@@ -13,6 +13,9 @@ class DocumentStream:
     #file name is left blank then it just holds an empty string
     def __init__(self, fileName = ''):
         self.fileName = fileName
+        self.sents = []
+        self.title = ""
+        self.author = ""
 
     #a method that will return a list of all of the sentences in the file
     def readWhole(self):
@@ -47,14 +50,15 @@ class DocumentStream:
                 listSent.append(s.Sentence(string))
                 break
             i += 1
-            
+
         return listSent
 
     #a method that prints out the text with one sentence per line
     def writeWhole(self):
+        if self.sents == []:
+            self.sents = self.readWhole()
         
-        listSent = self.readWhole()
-        for i in listSent:
+        for i in self.sents:
             #a statement that keeps track of whether or not the sentence is
             #blank, if it is then it won't be printed
             sentBlank = True
@@ -70,3 +74,29 @@ class DocumentStream:
             #prints the sentence if it is not blank
             if not sentBlank:
                 print(i.string)
+
+    #for books from the project Gutenberg, finds the title and author
+    #information, then adds that to self.title and self.author, and
+    #deletes the opening information from the list of sentences
+    def titleInfo(self):
+        
+        #if self.sents is blank then reads the sentences in
+        if self.sents == []:
+            self.sents = self.readWhole()
+
+        #checks that the project is from Project Gutenberg
+        if self.sents[0].string[:21] != 'The Project Gutenberg':
+            return
+        #if it is from Project Gutenberg it finds the title, author, and
+        #strips the introductory information from the list of sentences
+        else:
+            index = 0
+            for i in self.sents:
+                if i.string[:7] == 'Title: ':
+                    self.title = i.string[7:-2]
+                elif i.string[:8] == 'Author: ':
+                    self.author = i.string[8:-2]
+                elif i.string[:25] == '*** START OF THIS PROJECT':
+                    self.sents = self.sents[index + 1:]
+                index += 1
+            return

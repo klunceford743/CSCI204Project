@@ -7,6 +7,9 @@ scatter plot.
 It's methods are generatePlane and twoDScatter
 """
 
+import string as s
+import random
+
 class CommandLinePlotter:
     
     #the initialization method starts off with a blank plot.
@@ -14,7 +17,7 @@ class CommandLinePlotter:
         self.plot = []
 
     #a method that generates a blank plot (labeled y and x axes) given a range for x and y
-    def generatePlane(self, xStart, xEnd, yStart, yEnd):
+    def generatePlane(self, xStart, xEnd, yStart, yEnd, yScale = None):
         self.plot = []
         y = yEnd
         #creates a list of three spaces for each x value
@@ -23,7 +26,7 @@ class CommandLinePlotter:
         while y >= yStart:
             #creates a string of the y value, and the appropriate number of spaces and a |
             #to generate the y axis
-            axis = str(y) + ' '*(3-len(str(y))) + '|'
+            axis = str(y*yScale) + ' '*(4-len(str(y*yScale))) + '|'
             
             #adds the list of blank spaces so the dimensions of the plot will be
             #consistent and appends this to the plot
@@ -35,12 +38,12 @@ class CommandLinePlotter:
         underScore = ['___' for i in range(xEnd - xStart + 2)]
 
         #creates a blank spt before the x axis begins and appends it to the plot
-        secLast = [ '   |'] + underScore
+        secLast = [ '    |'] + underScore
         self.plot.append(secLast)
 
         #generates the x axis using the x values and appends it to the plot
         xAxis = [str(x) + ' '*(3-len(str(x))) for x in range(xStart, xEnd + 1)]
-        lastLine = ['    '] + xAxis
+        lastLine = ['     '] + xAxis
         self.plot.append(lastLine)
 
     #a method that creates a scatter plot given two lists (the second list is optional)
@@ -49,6 +52,11 @@ class CommandLinePlotter:
     #if there are two lists given, the first list is the x coordinates and the
     #second list is the y coordinates
     def twoDScatter(self, list1, list2 = []):
+
+        try:
+            windowSize = os.get_terminal_size.columns/lines
+        except:
+            windowSize = 10
 
         #if list2 is blank, it sets y as list1 and x as 1 to the length of list1
         if list2 == []:
@@ -60,17 +68,62 @@ class CommandLinePlotter:
             y = list2
 
         #gets the range for the x and y axes
-        yEnd = max(y)
-        yStart = min(y)
         xEnd = max(x)
         xStart = min(x)
-
+        yscale = max(y)//windowSize
+        yNew = [i//yscale for i in y]
+        yEnd = max(yNew)
+        yStart = min(yNew)
+        
+        
         #uses generatePlane to create a blank plot
-        self.generatePlane(xStart, xEnd, yStart, yEnd)
+        self.generatePlane(xStart, xEnd, yStart, yEnd, yscale)
 
         #for each x value, it plots a mark according to the given x and y coordinates
         for i in range(len(x)):
-                self.plot[yEnd - y[i]][x[i]-xStart + 1] = 'x  '
+            self.plot[int(yEnd - yNew[i])][x[i]-xStart + 1] = 'x  '
+
+        #loop to print the plot as a string
+        for line in self.plot:
+            string = ''
+            for item in line:
+                string += str(item)
+            print(string)
+
+
+    def barGraph(self, list1, list2 = []):
+
+        try:
+            windowSize = os.get_terminal_size.columns/lines
+        except:
+            windowSize = 10
+
+        #if list2 is blank, it sets y as list1 and x as 1 to the length of list1
+        if list2 == []:
+            y = list1
+            x = [i for i in range(1,len(list1) + 1)]
+ 
+        else:
+            x = list1
+            y = list2
+
+        #gets the range for the x and y axes
+        xEnd = max(x)
+        xStart = min(x)
+        yscale = max(y)//windowSize
+        yNew = [i//yscale for i in y]
+        yEnd = max(yNew)
+        yStart = min(yNew)
+        
+        
+        #uses generatePlane to create a blank plot
+        self.generatePlane(xStart, xEnd, yStart, yEnd, yscale)
+
+        #for each x value, it plots a mark according to the given x and y coordinates
+        for i in range(len(x)):
+            char = random.choice(s.printable)
+            for num in range(1, yNew[i]+ 1):
+                self.plot[int(yEnd - num)][x[i]-xStart + 1] = char + '  '
 
         #loop to print the plot as a string
         for line in self.plot:
