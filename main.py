@@ -34,9 +34,14 @@ def main():
         #top 10 words used in the document
         stats = b.BasicStats()
         stats.dic = b.BasicStats.createFreqMap(words)
-        top = stats.topN(10)
-        print(top)
-
+        stats.sl = b.BasicStats.slinkFreq(words)
+        top1 = stats.topN(10)
+        print(top1)
+        top2 = stats.newTopN(10)
+        for i in range(10):
+            top2.pop()
+        
+        """
         #makes a list of the number of times each of the top 10 words is used
         num = []
         for key in top:
@@ -59,7 +64,7 @@ def main():
         #prints the list of tuples as a key to know which word was the most
         #used to which was the 10th most used
         for i in range(len(wordList)):
-            print('Word', i +1, wordList[i][0], end = '; ')
+            print('Word', i +1, wordList[i][0], end = '; ')"""
 
     #handles any exceptions that might occur from the DocumentStream class
     except ds.DocumentStreamError as E:

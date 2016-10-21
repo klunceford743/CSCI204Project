@@ -8,12 +8,16 @@ The methods are topN and bottomN. There is a static method called
 createFreqMap
 """
 
+import sList as s
+import SStack as stack
+
 class BasicStats:
 
     #the initialization function, the only attribute starts off as a blank
     #dictionary
     def __init__(self):
         self.dic = {}
+        self.sl = s.SLink()
 
     #can be called before an instance is initialized, takes a list of words
     #as an input and returns a dictionary of what words are used as the keys
@@ -34,6 +38,25 @@ class BasicStats:
     The number of operations in this method is n, where n is the length
     of wordList. The theta notation of this is also n.
     """
+
+    @staticmethod
+    def slinkFreq(wordList):
+        wordCount = s.SLink()
+        for i in range(len(wordList)):
+            runner = wordCount.head
+            while runner is not None and runner.data[0] != i:
+                runner = runner.next
+            if runner is None:
+                wordCount.insert([i,1])
+            else:
+                num = runner.data[1] + 1
+                runnder.data = [i,num]
+        return wordCount
+    """ The number of operations in this method is n* the sum from i = 1 to n
+    where n is the length of wordList because each time the linked list can
+    potentially grow by one, in which case there will be another operation
+    on the inside loop. The theta notation of this is n^2 """
+                
 
     #uses the dictionary stored in self, and inputs a number, then outputs
     #a dictionary of just the top n most frequently used words
@@ -107,3 +130,22 @@ class BasicStats:
     have to go through each loop once and create both lists topNums and
     bottomNums at the same time.
     """
+
+    def newTopN(self,n):
+        top = stack.SStack()
+        for i in range(n):
+            top.push(['', -1])
+        for word in self.sl:
+            runner = top.st.head
+            prev = None
+            while runner is not None and word[1] > runner.data[1]:
+                prev = runner
+                runner = runner.next
+            if runner != top.st.head:
+                newNode = s.Node(word)
+                prev.next = newNode
+                newNode.next = runner
+                top.pop()
+
+        return top
+                

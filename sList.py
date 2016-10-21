@@ -3,51 +3,77 @@ sLink class
 """
 
 
-class sllist(object):
+class SLink(object):
     def __init__(self, head = None):
         self.head = head
 
-    def insert(self,data):
-        new_node = Node(data)
-        new_node.set_next(self.head)
-        self.head = new_node
+    def insert(self, data):
+        newNode = Node(data)
+        newNode.next = self.head
+        self.head = newNode
 
-    def size(self):
-        rn = self.head
+    def __len__(self):
+        runner = self.head
         c = 0 # c is the count 
-        while rn:
+        while runner is not None:
             c+=1
-            rn = rn.get_next()
+            runner = runner.next
         return c 
 
-    def search(self, data):
-        rn = self.head
-        status = False
-        while status is False and rn:
-            if rn.get_data() == data:
-                status = True
-            else:
-                rn = rn.get_next()
-        if rn is None:
-            raise ValueError("Data is invalid")
-        return rn
-
-    def delete(self, data):
+    def remove(self, word):
         prev = None
-        rn = self.head
-        status = False
-        while status and status is False:
-            if rn.get_data() == False:
+        runner = self.head
+        while runner is not None and runner.data[0] != word:
+            prev = runner
+            runner = runner.next
+        if runner is None:
+            return 'The data is not in the list'
+        if runner == self.head:
+            self.head = runner.next
+            del runner
+        else:
+            prev.next = runner.next
+            del runner
+
+    def search(self, word):
+        runner = self.head
+        state = False
+        while runner is not None:
+            if runner.data[0] == word:
+                state = True
+                break
+        return 
+
+    def delAll(self):
+        runner = self.head
+        while runner is not None:
+            temp = runner
+            runner = runner.next
+            del temp
+        self.head = None
+
+    def __iter__(self):
+        return SLinkIterator(self.head)
+                
 class Node(object):
-    def __init__(self,data = None, next_node = None):
+    def __init__(self,data = [], next_node = None):
         self.data = data
-        self.next_node = next_node
+        self.next = next_node
 
-    def get_next(self):
-        return self.next_node
+class SLinkIterator:
+    def __init__(self, head):
+        self.runner = head
+    
+    def __iter__(self):
+        return self
 
-    def set_next(self, new_next):
-        self.new_next = new_next
+    def __next__(self):
+        if self.runner == None:
+            raise StopIteration
+        else:
+            item = self.runner.data
+            self.runner = self.runner.next
+            return item
 
     
         
