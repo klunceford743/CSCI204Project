@@ -42,7 +42,7 @@ class BasicStats:
     @staticmethod
     def slinkFreq(wordList):
         wordCount = s.SLink()
-        for i in range(len(wordList)):
+        for i in wordList:
             runner = wordCount.head
             while runner is not None and runner.data[0] != i:
                 runner = runner.next
@@ -50,7 +50,7 @@ class BasicStats:
                 wordCount.insert([i,1])
             else:
                 num = runner.data[1] + 1
-                runnder.data = [i,num]
+                runner.data = [i,num]
         return wordCount
     """ The number of operations in this method is n* the sum from i = 1 to n
     where n is the length of wordList because each time the linked list can

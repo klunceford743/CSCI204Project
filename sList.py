@@ -42,7 +42,8 @@ class SLink(object):
             if runner.data[0] == word:
                 state = True
                 break
-        return 
+            runner = runner.next
+        return state
 
     def delAll(self):
         runner = self.head

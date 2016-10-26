@@ -39,7 +39,7 @@ def main():
         print(top1)
         top2 = stats.newTopN(10)
         for i in range(10):
-            top2.pop()
+            print(top2.pop())
         
         """
         #makes a list of the number of times each of the top 10 words is used

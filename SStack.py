@@ -1,12 +1,12 @@
 """ Katie Lunceford
 """
 
-import sList as s
+import sList as link
 
 class SStack:
 
     def __init__(self):
-        self.st = s.SLink()
+        self.st = link.SLink()
         self.size = 0
 
     def push(self, val):
@@ -19,7 +19,7 @@ class SStack:
         val = self.st.head.data
         self.st.head = self.st.head.next
         self.size -= 1
-        print(val)
+        return val
 
     def __len__(self):
         return self.size
