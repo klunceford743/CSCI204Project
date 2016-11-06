@@ -14,64 +14,100 @@ a specific button or mouse click, etc.
 """
 
 
-from tkinter import Tk, Label, Button, Entry, IntVar, END, W, E
+from tkinter import Tk, Label, Button, Entry, StringVar, END, W, E
+from plotting import *
+import Doc as d
+import BasicStats as b
+import CommandLinePlot as c
+import DocumentStreamError as ds
 
-
-class Calculator:
+class UserGUI:
 
     def __init__(self, master):
         self.master = master
-        master.title("Calculator")
+        master.title("Graphing")
 
-        self.total = 0
-        self.entered_number = 0
+        self.file = ''
+        self.entered_file = ''
 
-        self.total_label_text = IntVar()
-        self.total_label_text.set(self.total)
-        self.total_label = Label(master, textvariable=self.total_label_text)
+        self.file_label_text = StringVar()
+        self.file_label_text.set(self.file)
+        self.file_label = Label(master, textvariable=self.file_label_text)
 
-        self.label = Label(master, text="Total:")
+        self.label = Label(master, text="File:")
 
         vcmd = master.register(self.validate) # we have to wrap the command
         self.entry = Entry(master, validate="key", validatecommand=(vcmd, '%P'))
 
-        self.add_button = Button(master, text="+", command=lambda: self.update("add"))
-        self.subtract_button = Button(master, text="-", command=lambda: self.update("subtract"))
+        self.bar_button = Button(master, text="Bar Graph", command=lambda: self.update("bar"))
+        self.scatter_button = Button(master, text="Scatter Plot", command=lambda: self.update("scatter"))
         self.reset_button = Button(master, text="Reset", command=lambda: self.update("reset"))
 
         # LAYOUT
 
         self.label.grid(row=0, column=0, sticky=W)
-        self.total_label.grid(row=0, column=1, columnspan=2, sticky=E)
+        self.file_label.grid(row=0, column=1, columnspan=2, sticky=E)
 
         self.entry.grid(row=1, column=0, columnspan=3, sticky=W+E)
 
-        self.add_button.grid(row=2, column=0)
-        self.subtract_button.grid(row=2, column=1)
+        self.bar_button.grid(row=2, column=0)
+        self.scatter_button.grid(row=2, column=1)
         self.reset_button.grid(row=2, column=2, sticky=W+E)
 
     def validate(self, new_text):
         if not new_text: # the field is being cleared
-            self.entered_number = 0
+            self.entered_file = ''
             return True
 
         try:
-            self.entered_number = int(new_text)
+            self.entered_file = str(new_text)
             return True
-        except ValueError:
-            return False
+        except:
+            return True
 
     def update(self, method):
-        if method == "add":
-            self.total += self.entered_number
-        elif method == "subtract":
-            self.total -= self.entered_number
-        else: # reset
-            self.total = 0
+        if method == 'reset':
+            self.file = ''
+            num = []
+            self.file_label_text.set(self.file)
+            self.entry.delete(0, END)
+            return
+        try:
+            doc = d.Document(self.entered_file)
+            doc.generateWhole()
+            words = []
 
-        self.total_label_text.set(self.total)
+            for sent in doc.getSentences():
+                if not sent.string[-1].isalpha():
+                    s = sent.string[:-1]
+                else:
+                    s = sent.string
+                w = [x.lower() for x in s.split()]
+                words += w
+            stats = b.BasicStats()
+            stats.dic = b.BasicStats.createFreqMap(words)
+            top = stats.topN(10)
+
+            num = []
+            for key in top:
+                num.append(top[key])
+            num.sort(reverse = True)
+                
+            if method == "bar":
+                plot = Plotter(num)
+                plot.barGraph()
+                self.file = self.entered_file
+            elif method == "scatter":
+                plot = Plotter(num)
+                plot.scatterPlot()
+                self.file = self.entered_file
+        except ds.DocumentStreamError as E:
+            print(E.data)
+
+
+        self.file_label_text.set(self.file)
         self.entry.delete(0, END)
 
 root = Tk()
-my_gui = Calculator(root)
+my_gui = UserGUI(root)
 root.mainloop()
