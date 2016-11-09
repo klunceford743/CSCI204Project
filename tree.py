@@ -15,51 +15,81 @@ class DecisionTree:
 
     def __init__(self):
         self.root = None
+        self.columns = None
 
     def train(self, data, inputAttr, maxDepth):
-        if data == []:
-            raise Exception
-        state = True
-        val = data[0][0]
+        self.columns = inputAttr
+        self.root = makeTree(data, inputAttr, maxDepth)
+
+    def evaluate(self, twoDList):
+        return multiplePredictions(self.root, self.columns, twoDList)
+
+
+
+def makeTree(data, inputAttr, maxDepth):
+    if data == []:
+        raise Exception
+    state = True
+    val = data[0][0]
+    for x in range(len(data)):
+        if data[x][0] != val:
+            state = False
+            break
+    if state:
+        n = Node(val, [])
+        n.count = len(data)
+        return n
+    if len(inputAttr) == 1:
+        items = []
         for x in range(len(data)):
-            if data[x][0] != val:
-                state = False
-                break
-        if state:
-            n = Node(val, [])
-            n.count = len(data)
-            return n
-        if len(inputAttr) == 1:
-            items = []
-            for x in range(len(data)):
-                items.append(data[x][0])
-            val = mostFreq(items)
-            n = Node(val, [])
-            n.count = len(data)
-            return n
-        ind = maxGain(data)
-        keys = []
-        for x in data:
-            if not (x[ind] in keys):
-                keys.append(x[ind])
-        #print(data)
-        #print(keys)
-        newNode = Node(inputAttr[ind],keys)
-        newNode.count = len(data)
-        for x in range(len(keys)):
-            newData = []
-            for y in data:
-                if y[ind] == keys[x]:
-                    new = y[:ind] + y[ind+1:]
-                    newData.append(new)
-            newInput = inputAttr[:ind] + inputAttr[ind+1:]
-            #print(x)
-            #print(newInput)
-            #print(newData)
-            newNode.children[x] = self.train(newData, newInput, maxDepth)
-        return newNode
-        
-            
+            items.append(data[x][0])
+        val = mostFreq(items)
+        n = Node(val, [])
+        n.count = len(data)
+        return n
+    ind = maxGain(data)
+    keys = []
+    for x in data:
+        if not (x[ind] in keys):
+            keys.append(x[ind])
+    newNode = Node(inputAttr[ind],keys)
+    newNode.count = len(data)
+    for x in range(len(keys)):
+        newData = []
+        for y in data:
+            if y[ind] == keys[x]:
+                new = y[:ind] + y[ind+1:]
+                newData.append(new)
+        newInput = inputAttr[:ind] + inputAttr[ind+1:]
+        newNode.children[x] = makeTree(newData, newInput, maxDepth)
+    return newNode
+
+
+def predict(root, columns, oneDList):
+    if root == None:
+        return None
+    if root.children == []:
+        return root.data
+    ind = findIndex(root.data, columns)
+    item = oneDList[ind]
+    child = findIndex(item, root.values)
+    if child == None:
+        print('Cannot predict')
+        return None
+    answer = predict(root.children[child], columns, oneDList)
+    return answer
+
+def multiplePredictions(root, columns, twoDList):
+    for x in twoDList:
+        x[0] = predict(root, columns, x)
+    return twoDList
+
+
+def findIndex(val, l):
+    for x in range(len(l)):
+        if l[x] == val:
+            return x
+    return None
 
 
 
@@ -142,6 +172,24 @@ def generateTests():
          ['no','medium','no','heavy','bad'],\
          ['no','small','yes','average','average'],\
          ['no','medium','no','heavy','bad']]
+    return l
+
+def generatePredicts():
+    l = [[None,'small','no','average','good'], \
+         [None,'small','no','light','average'],\
+         [None,'small','yes','average','bad'],\
+         [None,'medium','no','heavy','bad'], \
+         [None,'large','no','average','bad'],\
+         [None,'medium','no','light','bad'],\
+         [None,'large','yes','heavy','bad'],\
+         [None,'large','no','heavy','bad'], \
+         [None,'medium','yes','light','bad'],\
+         [None,'large','no','average','bad'],\
+         [None,'small','no','light','good'],\
+         [None,'small','no','average','average'],\
+         [None,'medium','no','heavy','bad'],\
+         [None,'small','yes','average','average'],\
+         [None,'medium','no','heavy','bad']]
     return l
 
 def generateInput():
