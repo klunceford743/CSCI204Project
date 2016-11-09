@@ -17,7 +17,7 @@ class DecisionTree:
         self.root = None
 
     def train(self, data, inputAttr, maxDepth):
-        if list1 == []:
+        if data == []:
             raise Exception
         state = True
         val = data[0][0]
@@ -26,26 +26,38 @@ class DecisionTree:
                 state = False
                 break
         if state:
-            return Node(val, 0)
+            n = Node(val, [])
+            n.count = len(data)
+            return n
         if len(inputAttr) == 1:
             items = []
             for x in range(len(data)):
                 items.append(data[x][0])
             val = mostFreq(items)
-            return Node(val, 0)
+            n = Node(val, [])
+            n.count = len(data)
+            return n
         ind = maxGain(data)
         keys = []
         for x in data:
-            if not (data[x][ind] in keys):
-                keys.append(data[x][ind])
+            if not (x[ind] in keys):
+                keys.append(x[ind])
+        #print(data)
+        #print(keys)
         newNode = Node(inputAttr[ind],keys)
+        newNode.count = len(data)
         for x in range(len(keys)):
             newData = []
             for y in data:
                 if y[ind] == keys[x]:
-                    newData.append(y)
-            newInput = inputAttr[:ind] + inputAttr[ind:]
-            newNode.children[x] = train(newData, inputAttr, maxDepth)
+                    new = y[:ind] + y[ind+1:]
+                    newData.append(new)
+            newInput = inputAttr[:ind] + inputAttr[ind+1:]
+            #print(x)
+            #print(newInput)
+            #print(newData)
+            newNode.children[x] = self.train(newData, newInput, maxDepth)
+        return newNode
         
             
 
@@ -64,7 +76,7 @@ def mostFreq(items):
     return maximum
 
 def maxGain(data):
-    entropy = 1
+    entropy = 2
     loc = 0
     for x in range(1,len(data[0])):
         items = []
@@ -131,3 +143,6 @@ def generateTests():
          ['no','small','yes','average','average'],\
          ['no','medium','no','heavy','bad']]
     return l
+
+def generateInput():
+    return ['speed','engine','turbo','weight','fueleco']
