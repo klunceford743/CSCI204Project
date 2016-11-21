@@ -38,6 +38,14 @@ class TextFilter:
                 s += char
         self.doc = s
 
+    
+    def stripCommon(self):
+        f = open('test.txt', 'r')    #open test.tx
+        for line in f:
+            for i in range(len(self.doc)):
+                if self.doc[i] == line:
+                    self.doc[i].remove()
+
     def apply(self):
         for filt in self.strings:
             if filt == 'nw':
@@ -48,6 +56,8 @@ class TextFilter:
                 self.stripNull()
             elif filt == 'snum':
                 self.stripNumbers()
+            elif filt == 'common':
+                self.stripCommon()
             else:
                 print('Not a valid filter.')
 
