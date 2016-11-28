@@ -33,7 +33,7 @@ class BasicStats:
             #with an initial value of 0
             if wordList[i] in wordCount:
                 wordCount[wordList[i]] += 1
-            else:
+            elif wordList[i].isalpha():
                 wordCount[wordList[i]] = 1
         return wordCount
     """
@@ -64,6 +64,7 @@ class BasicStats:
         for key in self.dic:
             val = [key, self.dic[key]]
             self.l.append(val)
+    """ The run time of this is the m where m is the length of self.dic """
                 
 
     #uses the dictionary stored in self, and inputs a number, then outputs
@@ -75,7 +76,7 @@ class BasicStats:
         for key in self.dic:
             #if the value in the dic is greater than the smallest number in
             #topNums, then it replaces that value
-            if self.dic[key] > topNums[0] and key.isalpha():
+            if self.dic[key] > topNums[0]:
                 topNums[0] = self.dic[key]
             #sorts the top numbers so the smallest value is first
             topNums.sort()
@@ -161,6 +162,9 @@ class BasicStats:
         heap = h.HeapSort()
         x = heap.maxSort(self.l, n)
         return x
+    """ The number of operations in this is (in the worst case scenario 2n).
+    See analysis of HeapSort on homework 6. This is O(n).
+    """
 
     def bottomNHeap(self,n):
         heap = h.HeapSort()
