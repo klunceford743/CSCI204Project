@@ -35,11 +35,20 @@ def main():
         stats = b.BasicStats()
         stats.dic = b.BasicStats.createFreqMap(words)
         stats.sl = b.BasicStats.slinkFreq(words)
+        stats.listFreq()
         top1 = stats.topN(10)
         print(top1)
         top2 = stats.newTopN(10)
         for i in range(10):
             print(top2.pop())
+            
+        top3 = stats.topNHeap(10)
+        print(top3)
+
+        bottom1 = stats.bottomN(10)
+        print(bottom1)
+        bottom2 = stats.bottomNHeap(10)
+        print(bottom2)
         
         """
         #makes a list of the number of times each of the top 10 words is used

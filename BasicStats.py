@@ -10,6 +10,7 @@ createFreqMap
 
 import sList as s
 import SStack as stack
+import HeapSort as h
 
 class BasicStats:
 
@@ -18,6 +19,7 @@ class BasicStats:
     def __init__(self):
         self.dic = {}
         self.sl = s.SLink()
+        self.l = []
 
     #can be called before an instance is initialized, takes a list of words
     #as an input and returns a dictionary of what words are used as the keys
@@ -56,6 +58,12 @@ class BasicStats:
     where n is the length of wordList because each time the linked list can
     potentially grow by one, in which case there will be another operation
     on the inside loop. The theta notation of this is n^2 """
+
+    def listFreq(self):
+        self.l = []
+        for key in self.dic:
+            val = [key, self.dic[key]]
+            self.l.append(val)
                 
 
     #uses the dictionary stored in self, and inputs a number, then outputs
@@ -67,7 +75,7 @@ class BasicStats:
         for key in self.dic:
             #if the value in the dic is greater than the smallest number in
             #topNums, then it replaces that value
-            if self.dic[key] > topNums[0]:
+            if self.dic[key] > topNums[0] and key.isalpha():
                 topNums[0] = self.dic[key]
             #sorts the top numbers so the smallest value is first
             topNums.sort()
@@ -105,7 +113,7 @@ class BasicStats:
             #if there are no zeros then it checks if the value is smaller
             #than the largest number in the list, and if it is then it
             #replaces that number
-            elif self.dic[key] < bottomNums[-1]:
+            elif self.dic[key] < bottomNums[-1] and key.isalpha():
                 bottomNums[-1] = self.dic[key]
             #bottomNums is sorted each time
             bottomNums.sort()
@@ -141,11 +149,29 @@ class BasicStats:
             while runner is not None and word[1] > runner.data[1]:
                 prev = runner
                 runner = runner.next
-            if runner != top.st.head:
+            if runner != top.st.head and word[0].isalpha():
                 newNode = s.Node(word)
                 prev.next = newNode
                 newNode.next = runner
                 top.pop()
 
         return top
+
+    def topNHeap(self, n):
+        heap = h.HeapSort()
+        x = heap.maxSort(self.l, n)
+        return x
+
+    def bottomNHeap(self,n):
+        heap = h.HeapSort()
+        x = heap.minSort(self.l, n)
+        return x
+
+
+
+
+
+
+
+    
                 
