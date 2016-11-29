@@ -56,7 +56,7 @@ def main():
         stats = b.BasicStats()
         start1 = time.time()
         stats.dic = b.BasicStats.createFreqMap(words)
-        top1 = stats.topN(50)
+        top1 = stats.topN(100)
         end1 = time.time()
         print('Dictionary: {0:.5f} us.' .format( end1 - start1 ))
         """ The run time of this is n + 2m where n is the number of
@@ -67,14 +67,14 @@ so n+2m =< 3n. Therefore, this is O(n).
 
         start2 = time.time()
         stats.dic = b.BasicStats.createFreqMap(words)
-        stats.listFreq()
-        top2 = stats.topNHeap(50)
+        top2 = stats.topNHeap(100)
         end2 = time.time()
         print('Heap: {0:.5f} us.' .format( end2 - start2 ))
-        """ The run time of this is n + m + 2m where n is the number of
+        """ The run time of this is n + 2m where n is the number of
 words in the document and m is the length of the dictionary. createFreqMap has
-a run time of n, listFreq has a runtime of m, and topNHeap has a runtime of 2m.
-m <= n, so n+m+2m =< 4n. Therefore, this is O(n).
+a run time of n and topNHeap has a runtime of 2m.
+m <= n, so n+2m =< 3n. Therefore, this is O(n). On average, we would still
+expect the heap to perform faster than the dictionary."""
 
         
         

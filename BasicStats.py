@@ -58,13 +58,6 @@ class BasicStats:
     where n is the length of wordList because each time the linked list can
     potentially grow by one, in which case there will be another operation
     on the inside loop. The theta notation of this is n^2 """
-
-    def listFreq(self):
-        self.l = []
-        for key in self.dic:
-            val = [key, self.dic[key]]
-            self.l.append(val)
-    """ The run time of this is the m where m is the length of self.dic """
                 
 
     #uses the dictionary stored in self, and inputs a number, then outputs
@@ -160,7 +153,7 @@ class BasicStats:
 
     def topNHeap(self, n):
         heap = h.HeapSort()
-        x = heap.maxSort(self.l, n)
+        x = heap.maxSort(self.dic.items(), n)
         return x
     """ The number of operations in this is (in the worst case scenario 2n).
     See analysis of HeapSort on homework 6. This is O(n).
@@ -168,7 +161,7 @@ class BasicStats:
 
     def bottomNHeap(self,n):
         heap = h.HeapSort()
-        x = heap.minSort(self.l, n)
+        x = heap.minSort(self.dic.items(), n)
         return x
 
 

@@ -7,7 +7,7 @@ class HeapSort:
     def maxSort(self, nums, n):
         i = len(nums)//2
         self.size = len(nums)
-        self.heap = [0] + nums
+        self.heap = [0] + [(k,v) for k,v in nums]
         while i > 0:
             self.maxMoveUp(i)
             i = i - 1
@@ -40,7 +40,7 @@ class HeapSort:
     def minSort(self, nums, n):
         i = len(nums)//2
         self.size = len(nums)
-        self.heap = [0] + nums
+        self.heap = [0] + [(k,v) for k,v in nums]
         while i > 0:
             self.minMoveUp(i)
             i = i - 1
