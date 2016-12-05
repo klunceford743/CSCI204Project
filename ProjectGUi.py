@@ -82,7 +82,7 @@ class GUI:
         
         self.trainButton = Button(master,text = "TRAIN", command = lambda: self.training(),bd = 3)
 
-        self.PredictButton = Button(master,text="Predict Document",bd=5,command = lambda:self.training())
+        self.PredictButton = Button(master,text="Predict Document",bd=5,command = lambda:self.predict())
         self.PredictLabel = Label(master,text="Prediction: " + str(self.prediction))
         self.predictEntry = Entry(master)
 
@@ -119,20 +119,20 @@ class GUI:
         self.trainButton.grid(row=19,column=2,stick=W+E)
 
         self.predictgenrelabel = Label(master, text = "Genre of Predicted: ")
-        self.predictyearLabel = Label(master,text = "Year of Predicted: ")
-        self.predictFileLabel = Label (master,text = "File to Predict: ")
-        self.predictyearEntry = Entry(master, validate='key',validatecommand = (vcmd3, '%P'))
+        self.predictfileLabel = Label(master,text = "File to Predicted: ")
+        self.predictyearLabel = Label (master,text = "Year of Predict: ")
+        self.predictfileEntry = Entry(master, validate='key',validatecommand = (vcmd, '%P'))
         self.predictgenreEntry = Entry(master, validate='key',validatecommand = (vcmd2, '%P'))
-        self.predictfileEntry = Entry(master,validate='key',validatecommand = (vcmd, '%P'),bd=3)
+        self.predictyearEntry = Entry(master,validate='key',validatecommand = (vcmd3, '%P'),bd=3)
 
         self.predictgenrelabel.grid(row=20,column=2,stick=W+E)
-        self.predictyearLabel.grid(row=20,column=1,stick=W+E)
-        self.predictyearEntry.grid(row=21,column=1,stick=W+E)
+        self.predictfileLabel.grid(row=20,column=1,stick=W+E)
+        self.predictfileEntry.grid(row=21,column=1,stick=W+E)
         self.predictgenreEntry.grid(row=21,column=2,stick=W+E)
-        self.predictFileLabel.grid(row=20,column=3,stick=W+E)
+        self.predictyearLabel.grid(row=20,column=3,stick=W+E)
         
         self.PredictButton.grid(row=22,column=1,stick=W+E)
-        self.predictEntry.grid(row=21,column=3,stick=W+E)
+        self.predictyearEntry.grid(row=21,column=3,stick=W+E)
         self.PredictLabel.grid(row=23,column=1)
 
         self.Documents = Label(master,text="Title                   Genre              Author       Year")
@@ -230,22 +230,30 @@ class GUI:
 
     def predict(self):
         file = d.Document(self.entered_file)
+        file.genre = self.genre
+        file.year = self.year
         if self.statMethod == '1':
-            file.genre = self.genre
-            data = [None, assignGenre(file.genre)]
+            data = [[None, f.assignGenre(file)]]
             pred = self.skGenre.eval(data)
         elif self.statMethod == '2':
-            file.year = self.year
-            data = [None, assignYear(file.year)]
+            data = [[None, f.assignYear(file)]]
             pred = self.skYear.eval(data)
         elif self.statMethod == '3':
-            data = predData(file, self.skTop.labels)
+            data = f.predData(file, self.skTop.labels)
             pred = self.skTop.eval(data)
         elif self.statMethod == '4':
-            data = predData(file, self.skBottom.labels)
+            data = f.predData(file, self.skBottom.labels)
             pred = self.skBottom.eval(data)
-        return pred[0]
-            
+        self.prediction = pred[0]
+
+        file.author = pred[0]
+        self.fileL.append(file)
+        self.text.insert(INSERT,' '*10 + str(file.fileName) + ' '*5 + str(file.genre) + ' '*5 + str(file.author) + ' '*5 + str(file.year) + '\n')
+        self.predictfileEntry.delete(0,END)
+        self.predictyearEntry.delete(0,END)
+        self.predictgenreEntry.delete(0,END)
+
+        
 
             
                     

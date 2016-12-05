@@ -46,8 +46,8 @@ class SKTree:
             x[row] = t
 
         x = self.tree.predict(x)
-        print(x)
         #Now you will have to get the values from y and move them to the targe column of data
+        return x
 
 
     def toDot(self, filename):

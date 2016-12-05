@@ -8,8 +8,8 @@ import SKTree as t
 def dataGenre(documents):
     data = []
     labels = ['author', 'genre']
-    for d in documents:
-        data.append([d.author, assignGenre(d)])
+    for doc in documents:
+        data.append([doc.author, assignGenre(doc)])
     return data, labels
 
 def assignGenre(doc):
@@ -29,14 +29,14 @@ def assignGenre(doc):
 def dataYear(documents):
     data = []
     labels = ['author', 'year']
-    for d in documents:
-        data.append([d.author, assignYear(doc)])
+    for doc in documents:
+        data.append([doc.author, assignYear(doc)])
     return data, labels
 
 def assignYear(doc):
-    if d.year < 1850:
+    if int(doc.year) < 1850:
         return 0
-    elif d.year < 1900:
+    elif int(doc.year) < 1900:
         return 1
     else:
         return 2
