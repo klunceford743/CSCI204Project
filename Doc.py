@@ -1,12 +1,12 @@
-"""Katie Lunceford
+"""Katie Lunceford and Jon Li
 
 This is the Document object. It will be constructed as an Abstract Data
 Type. It relies on the DocumentStream object. It has a class attribute of
 count, and it's individual attributes are: fileName (the name of the file to
 be analyzed), refNum (a reference number for the document), sentences (a list
 of individual sentences in the document), wordCnt (a count of the words in
-the document), charCnt (a count of the characters in the document), and
-lineCnt (the number of lines in the document).
+the document), charCnt (a count of the characters in the document),
+lineCnt (the number of lines in the document), author, year, and genre
 
 The methods in this object are generateWhole, getSentences, setSentences,
 getRefNum, getWordCnt, getLineCnt, getCharCnt, setWordCnt, setLineCnt, and setCharCnt
