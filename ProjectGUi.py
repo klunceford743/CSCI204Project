@@ -1,4 +1,3 @@
-
 from tkinter import Tk, Label, Button, Entry, IntVar, END, W, E, LabelFrame
 from TextFilter import *
 from tkinter import *
@@ -8,12 +7,11 @@ import datafunctions as f
 import tree as tr
 import SKPCA as p
 
-# predict needs an entry point....
-
-
 class GUI:
 
     def __init__(self, master):
+        '''The init is where the phsysical layout of the GUI is. Has all the labels,textboxes, buttons, and entry-points
+           All the buttons have commands attached to them that are called.'''
         self.master = master
         master.title("CSCI-204 Final Project")
         self.file = None
@@ -40,12 +38,11 @@ class GUI:
         self.workingLabel = Label(master ,text = "File to Edit: ")
         
 # Entry box storage section
+
         vcmd = master.register(self.validate)
-        vcmd1 = master.register(self.validateFile)
         vcmd2 = master.register(self.validateGenre)
         vcmd3 = master.register(self.validateYear)
         vcmd4 = master.register(self.validateAuthor)
- #       vcmd5 = master.register(self.trainers)
         self.entry = Entry(master, validate="key",validatecommand=(vcmd, '%P'))
                         
 # Buttons and input boxes declaration
@@ -147,6 +144,7 @@ class GUI:
         self.text.grid(row=25,column=1)
         
     def validate(self, new_text):
+        '''Validates the entered text to make sure it is words'''
         if not new_text: # the field is being cleared
             self.entered_file= ''
             return True
@@ -157,17 +155,8 @@ class GUI:
         except ValueError:
             return False
 
-    def validateFile(self,newtext):
-        if not newtext:
-            self.newFile = ''
-            return True
-        try:
-            self.newFile = str(newtext)
-            return True
-        except ValueError:
-            return False
-
     def validateGenre(self,newtext):
+        '''makes sure the entered text is text'''
         if not newtext:
             self.genre = None
             return True
@@ -178,6 +167,7 @@ class GUI:
             return False
 
     def validateAuthor(self,newtext):
+        '''makes sure author label is text'''
         if not newtext:
             self.author = None
             return True
@@ -188,6 +178,7 @@ class GUI:
             return False
 
     def validateYear(self,newtext):
+        '''makes sure the entered value is a valid year'''
         if not newtext:
             self.year = 0
             return True
@@ -198,6 +189,7 @@ class GUI:
             return False
 
     def addInfo(self,infotype):
+        '''adds the information for each file'''
         if infotype == 'genre':
             self.newFile.genre = self.genre
         if infotype == 'year':
@@ -206,14 +198,13 @@ class GUI:
             self.newFile.author = self.author
 
     def applyFilter(self,method):
-        '''apply the filter'''
+        '''Adds filter to list of filter methods if the button pressed is not "Apply Filter". If the button is Apply Filter,
+            then the list of filters will subsequently be applied to the documents.'''
         if method == "apply filters":
             for doc in self.fileL:
                 newtext = TextFilter(doc.fileName, self.filtL)
                 newtext.apply()
                 doc.doc = newtext.doc
-                f = open('tsting.txt', 'w', encoding = 'UTF-8')
-                f.write(doc.doc)
         else:
             if method not in self.filtL:
                 self.filtL.append(str(method))
@@ -223,6 +214,7 @@ class GUI:
         self.statMethod = method
 
     def training(self):
+        '''applies the statistical method for training that the user has clicked on to the documents that were passed'''
         if self.statMethod == '1':
             self.skGenre = f.trainGenre(self.fileL)
         elif self.statMethod == '2':
@@ -246,6 +238,7 @@ class GUI:
     
 
     def predict(self):
+        '''calls all the methods for each button that corresponds to a prediction method'''
         file = d.Document(self.entered_file)
         file.genre = self.genre
         file.year = self.year
@@ -292,6 +285,8 @@ class GUI:
                     
 
     def update(self, method):
+        '''This method appends and prepares the file doc entered along with entered attributes
+           and then writes in the information into a text box at the bottom. '''
         if method == "add":
             file = d.Document(self.entered_file)
             file.author = self.author
@@ -299,13 +294,13 @@ class GUI:
             file.year = self.year
             self.fileL.append(file)
             self.text.insert(INSERT,' '*10 + str(file.fileName) + ' '*5 + str(file.genre) + ' '*5 + str(file.author) + ' '*5 + str(file.year) + '\n')
- #           self.main()
-                                                 
+ # Makes all the entries blank                                                
         self.fileEntry.delete(0,END)
         self.AuthorEnt.delete(0,END)
         self.YearEnt.delete(0,END)
         self.GenreEnt.delete(0,END)
 
+#runs the GUI
 root = Tk()
 my_gui = GUI(root)
 root.mainloop()

@@ -1,5 +1,10 @@
-""" Katie Lunceford
-Formatting data
+""" Katie Lunceford and Jon Li
+Data functions for formatting data to be passed into authorship attribution
+programs.
+
+The functions in this file are dataGenre, assignGenre, dataYear, assignYear, dataTop,
+dataBottom, predData, trainGenre, trainYear, trainTop, trainBottom, trainGenreID,
+trainYearID, trainTopID, trainBottomID, dataPCA, and predPCA.
 """
 import BasicStats as b
 import Doc as d
