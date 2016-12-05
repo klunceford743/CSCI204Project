@@ -166,7 +166,7 @@ def trainBottomID(documents):
 
 def dataPCA(documents):
     data = []
-    labels = []
+    labels = ['author']
     words = []
     for doc in documents:
         data.append([doc.author])
@@ -185,7 +185,7 @@ def dataPCA(documents):
         for sent in documents[i].getSentences():
             w = [y.lower() for y in sent.string.split()]
             words += w
-        for l in labels:
+        for l in labels[1:]:
             cnt = 0
             for w in words:
                 if w == l:
@@ -193,5 +193,22 @@ def dataPCA(documents):
             ratio = cnt/wCount
             data[i].append(ratio)
     return data, labels
+
+def predPCA(doc, labels):
+    data = [[None]]
+    doc.generateWhole()
+    wCount = doc.getWordCnt()
+    words = []
+    for sent in doc.getSentences():
+        w = [y.lower() for y in sent.string.split()]
+        words += w
+    for l in labels[1:]:
+        cnt = 0
+        for w in words:
+            if w == l:
+                cnt += 1
+        ratio = cnt/wCount
+        data[0].append(ratio)
+    return data
 
 

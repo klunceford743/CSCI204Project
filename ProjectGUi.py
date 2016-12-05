@@ -273,6 +273,10 @@ class GUI:
         elif self.statMethod == '8':
             data = f.predData(file, self.idBottom.columns)
             pred = self.idBottom.evaluate(data)[0]
+        elif self.statMethod == '9':
+            data = f.predPCA(file, self.pca.labels)
+            ind = self.pca.eval(data)
+            pred = [self.fileL[ind].author]
         self.prediction = pred[0]
         print('The predicted author is: ' + str(self.prediction))
         file.author = pred[0]
