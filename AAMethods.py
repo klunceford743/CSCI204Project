@@ -1,4 +1,4 @@
-""" Katie Lunceford
+""" Katie Lunceford and Jon Li
 """
 
 class AAMethods:
@@ -47,5 +47,7 @@ a relatively new and mathematically advanced topic. Overall, the chapter details
 the benefits and pitfalls of each of the different methods. Each method has its
 benefits but has also been shown to be unreliable when examining certain types
 of data.
+
+This class never actually ended up getting used in our final project
 """
     pass

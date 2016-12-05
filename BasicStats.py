@@ -1,11 +1,10 @@
-""" Katie Lunceford
+""" Katie Lunceford and Jon Li
 
 This is the BasicStats object that is used to generate stats about given
-strings. The only attribute is a dictionary that keeps track of how many
-times a word is used.
+strings. The attributes are a dictionary and a linked list.
 
-The methods are topN and bottomN. There is a static method called
-createFreqMap
+There are static methods called createFreqMap and slinkFreq. The other
+methods are topN, bottomN, newTopN, topNHeap, and bottomNHeap
 """
 
 import sList as s
@@ -15,15 +14,17 @@ import HeapSort as h
 class BasicStats:
 
     #the initialization function, the only attribute starts off as a blank
-    #dictionary
+    #dictionary and blank linked list
     def __init__(self):
         self.dic = {}
         self.sl = s.SLink()
-        self.l = []
 
-    #can be called before an instance is initialized, takes a list of words
-    #as an input and returns a dictionary of what words are used as the keys
-    #and the frequency with which they're used as the values
+    # can be called before an instance is initialized, takes a list of words
+    # as an input and returns a dictionary of what words are used as the keys
+    # and the frequency with which they're used as the values
+    # pre-conditions: wordList is 1D list of words
+    # post: returns wordCount, dictionary of individual words as the keys and
+    # the values are the number of times they appear in the wordList
     @staticmethod
     def createFreqMap(wordList):
         wordCount = {}
@@ -44,6 +45,11 @@ class BasicStats:
     of wordList. The theta notation of this is also n.
     """
 
+    # takes a list of words as a dictionary and returns a singularly
+    # linked list
+    # pre: wordList is a 1D list of words
+    # post: wordCount is a linked list and the data in each is a
+    # python list that contains the word and the count [word, count]
     @staticmethod
     def slinkFreq(wordList):
         wordCount = s.SLink()
@@ -63,8 +69,11 @@ class BasicStats:
     on the inside loop. The theta notation of this is n^2 """
                 
 
-    #uses the dictionary stored in self, and inputs a number, then outputs
-    #a dictionary of just the top n most frequently used words
+    # uses the dictionary stored in self, and inputs a number, then outputs
+    # a dictionary of just the top n most frequently used words
+    # pre: self.dic must be non-empty and n is an integer > 0
+    # post: returns a dictionary of the n words used the most times, with
+    # the keys as the words and the values as the count
     def topN(self, n):
         top = {}
         #creates a list of n 0s
@@ -95,9 +104,12 @@ class BasicStats:
     length of self.dic. The theta notation of this is just n.
     """
 
-    #a method similar to topN that uses the dictionary stored in self, and
-    #inputs a number, then outputs a dictionary of just the bottom n most
-    #frequently used words
+    # a method similar to topN that uses the dictionary stored in self, and
+    # inputs a number, then outputs a dictionary of just the bottom n most
+    # frequently used words
+    # pre: self.dic myst be non-empty and n is an integer > 0
+    # post: returns a dictionary of the n words used the least times, with
+    # the keys as the words and the values as the count
     def bottomN(self, n):
         bottom = {}
         #creates a list of n 0s
@@ -136,6 +148,10 @@ class BasicStats:
     bottomNums at the same time.
     """
 
+    # method that uses the linked list instead of the dictionary to find the
+    # top n most frequently used words
+    # pre: self.sl is not empty and n is an integer > 0
+    # post: returns a linked list of size n with the top words, in order
     def newTopN(self,n):
         top = stack.SStack()
         for i in range(n):
@@ -153,7 +169,12 @@ class BasicStats:
                 top.pop()
 
         return top
-
+    
+    # method that uses a max heap to find the top n most frequently used words.
+    # uses self.dic to generate the heap
+    # pre: self.dic is not empty and n is an integer greater than 0
+    # post: returns a sorted python list of size n in descending order, 2D list of
+    # [word, count]
     def topNHeap(self, n):
         heap = h.HeapSort()
         x = heap.maxSort(self.dic.items(), n)
@@ -161,7 +182,12 @@ class BasicStats:
     """ The number of operations in this is (in the worst case scenario 2n).
     See analysis of HeapSort on homework 6. This is O(n).
     """
-
+    
+    # method that uses a min heap to find the bottom n least frequently used
+    # words. uses self.dic to generate the heap
+    # pre: self.dic is not empty and n is an integer greater than 0
+    # post: returns a sorted python list in increasing order, 2D list of
+    # [word,count]
     def bottomNHeap(self,n):
         heap = h.HeapSort()
         x = heap.minSort(self.dic.items(), n)

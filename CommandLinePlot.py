@@ -1,10 +1,10 @@
-"""Katie Lunceford
+"""Katie Lunceford and Jon Li
 
 The CommandLinePlotter object that will be used to generate scatter plots. The only
 attribute is the plot which holds a twoD array that will show axis and the points on the
 scatter plot.
 
-It's methods are generatePlane and twoDScatter
+It's methods are generatePlane and twoDScatter and barGraph
 """
 
 import string as s
@@ -16,7 +16,11 @@ class CommandLinePlotter:
     def __init__(self):
         self.plot = []
 
-    #a method that generates a blank plot (labeled y and x axes) given a range for x and y
+    # a method that generates a blank plot (labeled y and x axes) given a range for x and y
+    # pre: xStart, xEnd, yStart and yEnd are integers, where xStart is less than xEnd,
+    # and yStart is before yEnd, yScale is an optional variable that is the scale for the
+    # y axis
+    # post: self.plot is an empty scatter plot with the given dimensions
     def generatePlane(self, xStart, xEnd, yStart, yEnd, yScale = None):
         self.plot = []
         y = yEnd
@@ -46,11 +50,14 @@ class CommandLinePlotter:
         lastLine = ['     '] + xAxis
         self.plot.append(lastLine)
 
-    #a method that creates a scatter plot given two lists (the second list is optional)
-    #if the second list is left blank, the first list creates the y coordinates and
-    #the x coordinates are 1 to the length of the first list
-    #if there are two lists given, the first list is the x coordinates and the
-    #second list is the y coordinates
+    # a method that creates a scatter plot given two lists (the second list is optional)
+    # if the second list is left blank, the first list creates the y coordinates and
+    # the x coordinates are 1 to the length of the first list
+    # if there are two lists given, the first list is the x coordinates and the
+    # second list is the y coordinates
+    # pre: list1 is a 1d list of numbers, list2 is an optional variable
+    # post: prints out self.plot, showing a scatterplot of the lists passed in
+    
     def twoDScatter(self, list1, list2 = []):
 
         try:
@@ -91,6 +98,11 @@ class CommandLinePlotter:
             print(string)
 
 
+    # generates a bar graph of the lists passed in. if there is one list passed in
+    # then that is the y coordinates and the x coordinates are 1 to the lenght of
+    # the first list. if there are two lists list1 is the x and list2 is the y
+    # pre: list1 is a list of numbers
+    # post: prints out a bar graph of the lists passed in
     def barGraph(self, list1, list2 = []):
 
         try:
