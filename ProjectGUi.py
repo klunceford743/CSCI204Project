@@ -3,6 +3,8 @@ from tkinter import Tk, Label, Button, Entry, IntVar, END, W, E, LabelFrame
 from TextFilter import *
 from tkinter import *
 import Doc as d
+import SKTree as t
+import datafunctions as f
 
 # predict needs an entry point....
 
@@ -21,6 +23,11 @@ class GUI:
         self.genre = None
         self.year = None
         self.entered_file = ''
+        self.statMethod = 0
+        self.skGenre = None
+        self.skYear = None
+        self.skTop = None
+        self.skBottom = None
 
 # message Label Text Stuff
 
@@ -40,19 +47,21 @@ class GUI:
         self.label1 = Label(master, text= "Document Name: ")
 
         self.fileEntry = Entry(master,validate='key',validatecommand = (vcmd, '%P'),bd=3)
+        
 
-        self.filter0 = Button(master, text= "Normalize White Space", command=lambda: self.whitespacefilter())
-        self.filter1 = Button(master, text= "Normalize Case", command=lambda: self.normalizecasefilter)
-        self.filter2 = Button(master, text= "Strip Null", command=lambda: self.stripnullfilters())
-        self.filter3 = Button(master, text= "Strip Numbers", command=lambda: self.stripnumbersfilter())
-        self.filter4 = Button(master, text= "Strip Common Words", command=lambda: self.stripcommonwordsfilter())
+        self.filter0 = Button(master, text= "Normalize White Space", command=lambda: self.applyFilter("nw"))       
+        self.filter1 = Button(master, text= "Normalize Case", command=lambda: self.applyFilter("nc"))        
+        self.filter2 = Button(master, text= "Strip Null", command=lambda: self.applyFilter("sn"))                                                                                         
+        self.filter3 = Button(master, text= "Strip Numbers", command=lambda: self.applyFilter("snum"))
+        self.filter4 = Button(master, text= "Strip Common Words", command=lambda: self.applyFilter("common"))
+        self.appFilter = Button(master, text= "APPLY FILTERS", command=lambda: self.applyFilter("apply filters"))
 
         self.addInfo = Label(master,text = "-----------Add Info--------------")
         self.addInfo.grid(row=3,column=1,stick=W+E)
         self.GenreButt = Label(master, text = 'Enter Genre: ')
         self.GenreEnt = Entry(master, validate='key',validatecommand = (vcmd2, '%P'),bd=3)       
         self.YearButt = Label(master,  text = 'Enter Year: ')
-        self.YearEnt = Entry(master,validate='key',validatecommand = (vcmd3, '%P'), bd=3)
+        self.YearEnt = Entry(master,validate='key',validatecommand = (vcmd3, '%P'), bd=3)                                                                                      
         self.AuthorButt = Label(master, text = 'Enter Author: ')
         self.AuthorEnt = Entry(master, validate='key',validatecommand = (vcmd4, '%P'), bd=3)
 
@@ -61,10 +70,17 @@ class GUI:
                              
         self.trainsection = Label(master,text="--------Training----------")
         self.trainsection.grid(row=14,column=1,stick=W+E)
-        self.statmethod1 = Button(master,text = "Sk Tree",command = lambda: self.chooseStat('1'))
-        self.statmethod2 = Button(master,text = "ID 3",command = lambda: self.chooseStat('2'))
-        self.statmethod3 = Button(master,text = "SKPCA",command = lambda: self.chooseStat('3'))
-        self.trainButton = Button(master,text = "TRAIN", command = lambda: self.training())
+        self.statmethod1 = Button(master,text = "Sk Tree Genre",command = lambda: self.chooseStat('1'))
+        self.statmethod2 = Button(master,text = "Sk Tree Year",command = lambda: self.chooseStat('2'))
+        self.statmethod3 = Button(master,text = "ID3 Genre",command = lambda: self.chooseStat('3'))
+        self.statmethod4 = Button(master,text = "ID3 Year ",command = lambda: self.chooseStat('4'))
+        self.statmethod5 = Button(master,text = "SK Top Words",command = lambda: self.chooseStat('5'))
+        self.statmethod6 = Button(master,text = "SK Bottom Words",command = lambda: self.chooseStat('6'))
+        self.statmethod7 = Button(master,text = "ID3 Top Words",command = lambda: self.chooseStat('7'))
+        self.statmethod8 = Button(master,text = "ID3 Bottom Words",command = lambda: self.chooseStat('8'))
+        self.statmethod9 = Button(master,text = "SK PCA",command = lambda: self.chooseStat('9'))
+        
+        self.trainButton = Button(master,text = "TRAIN", command = lambda: self.training(),bd = 3)
 
         self.PredictButton = Button(master,text="Predict Document",bd=5,command = lambda:self.training())
         self.PredictLabel = Label(master,text="Prediction: " + str(self.prediction))
@@ -92,19 +108,38 @@ class GUI:
         self.YearEnt.grid(row=6, column =2,stick = W+E)
 
         self.statmethod1.grid(row=15,column =1, stick = W+E)
-        self.statmethod2.grid(row=16,column =1, stick = W+E)
-        self.statmethod3.grid(row=17,column =1, stick = W+E)
-        self.trainButton.grid(row=18,column=2,stick=W+E)
+        self.statmethod2.grid(row=15,column =2, stick = W+E)
+        self.statmethod3.grid(row=16,column =1, stick = W+E)
+        self.statmethod4.grid(row=16,column =2, stick = W+E)
+        self.statmethod5.grid(row=17,column =1, stick = W+E)
+        self.statmethod6.grid(row=17,column =2, stick = W+E)
+        self.statmethod7.grid(row=18,column =1, stick = W+E)
+        self.statmethod8.grid(row=18,column =2, stick = W+E)
+        self.statmethod9.grid(row=19,column =1, stick = W+E)
+        self.trainButton.grid(row=19,column=2,stick=W+E)
 
-        self.PredictButton.grid(row=19,column=1,stick=W+E)
-        self.predictEntry.grid(row=19,column=2,stick=W+E)
-        self.PredictLabel.grid(row=20,column=1)
+        self.predictgenrelabel = Label(master, text = "Genre of Predicted: ")
+        self.predictyearLabel = Label(master,text = "Year of Predicted: ")
+        self.predictFileLabel = Label (master,text = "File to Predict: ")
+        self.predictyearEntry = Entry(master, validate='key',validatecommand = (vcmd3, '%P'))
+        self.predictgenreEntry = Entry(master, validate='key',validatecommand = (vcmd2, '%P'))
+        self.predictfileEntry = Entry(master,validate='key',validatecommand = (vcmd, '%P'),bd=3)
+
+        self.predictgenrelabel.grid(row=20,column=2,stick=W+E)
+        self.predictyearLabel.grid(row=20,column=1,stick=W+E)
+        self.predictyearEntry.grid(row=21,column=1,stick=W+E)
+        self.predictgenreEntry.grid(row=21,column=2,stick=W+E)
+        self.predictFileLabel.grid(row=20,column=3,stick=W+E)
+        
+        self.PredictButton.grid(row=22,column=1,stick=W+E)
+        self.predictEntry.grid(row=21,column=3,stick=W+E)
+        self.PredictLabel.grid(row=23,column=1)
 
         self.Documents = Label(master,text="Title                   Genre              Author       Year")
-        self.Documents.grid(row=21,column=1)
+        self.Documents.grid(row=24,column=1)
         
         self.text = Text(master)
-        self.text.grid(row=22,column=1)
+        self.text.grid(row=25,column=1)
         
     def validate(self, new_text):
         if not new_text: # the field is being cleared
@@ -112,7 +147,7 @@ class GUI:
             return True
 
         try:
-            self.entered_file = str(new_text)
+            self.entered_file = str(new_text)                                                                                
             return True
         except ValueError:
             return False
@@ -165,37 +200,54 @@ class GUI:
         if infotype == 'author':
             self.newFile.author = self.author
 
-
-    def whitespacefilter(self):
-        for doc in self.fileL:
-            t = TextFilter(doc.fileName, '')
-            t.normalizeWhite()
-            doc.
-
-    def normalizecasefilter(self):
-        pass
-
-    def stripnullfilters(self):
-        pass
-
-    def stripnumbersfilter(self):
-        pass
-
-    def stripcommonwordsfilter(self):
-        pass
-        
+    def applyFilter(self,method):
+        '''apply the filter'''
+        if method == "apply filters":
+            for doc in self.fileL:
+                newtext = TextFilter(doc.fileName, self.filtL)
+                newtext.apply()
+                doc.doc = newtext.doc
+                f = open('tsting.txt', 'w', encoding = 'UTF-8')
+                f.write(doc.doc)
+        else:
+            if method not in self.filtL:
+                self.filtL.append(str(method))
                 
     def chooseStat(self,method):
         '''applies the Stat Method'''
-        if method == '1':
-            pass
-        if method == '2':
-            pass
-        if method =='3':
-            pass
+        self.statMethod = method
 
-    def training(self,method):
-        pass
+    def training(self):
+        if self.statMethod == '1':
+            self.skGenre = f.trainGenre(self.fileL)
+        elif self.statMethod == '2':
+            self.skYear = f.trainYear(self.fileL)
+        elif self.statMethod == '3':
+            self.skTop = f.trainTop(self.fileL)
+        elif self.statMethod == '4':
+            self.skBottom = f.trainBottom(self.fileL)
+        return self.skGenre
+
+    def predict(self):
+        file = d.Document(self.entered_file)
+        if self.statMethod == '1':
+            file.genre = self.genre
+            data = [None, assignGenre(file.genre)]
+            pred = self.skGenre.eval(data)
+        elif self.statMethod == '2':
+            file.year = self.year
+            data = [None, assignYear(file.year)]
+            pred = self.skYear.eval(data)
+        elif self.statMethod == '3':
+            data = predData(file, self.skTop.labels)
+            pred = self.skTop.eval(data)
+        elif self.statMethod == '4':
+            data = predData(file, self.skBottom.labels)
+            pred = self.skBottom.eval(data)
+        return pred[0]
+            
+
+            
                     
 
     def update(self, method):

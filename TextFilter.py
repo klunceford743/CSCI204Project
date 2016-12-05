@@ -1,6 +1,7 @@
 """ Katie Lunceford
 """
 import codecs
+import string
 
 class TextFilter:
 
@@ -40,11 +41,15 @@ class TextFilter:
 
     
     def stripCommon(self):
-        f = open('test.txt', 'r')    #open test.tx
-        for line in f:
-            for i in range(len(self.doc)):
-                if self.doc[i] == line:
-                    self.doc[i].remove()
+        f = open('filterwords.txt', 'r') #open filterwords.tx
+        common = f.read().split()
+        words = self.doc.split()
+        s = ''
+        for w in words:
+            if not (w in common):
+                s += w + ' '
+        self.doc = s
+                
 
     def apply(self):
         for filt in self.strings:

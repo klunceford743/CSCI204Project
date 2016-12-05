@@ -31,10 +31,13 @@ class BasicStats:
             #checks if the word is already in the dictionary, if it is it
             #adds one to the value, if it is not it adds it to the dictionary
             #with an initial value of 0
-            if wordList[i] in wordCount:
-                wordCount[wordList[i]] += 1
+            word = wordList[i]
+            if not word[-1].isalpha():
+                word = word[:-1]
+            if word in wordCount:
+                wordCount[word] += 1
             elif wordList[i].isalpha():
-                wordCount[wordList[i]] = 1
+                wordCount[word] = 1
         return wordCount
     """
     The number of operations in this method is n, where n is the length

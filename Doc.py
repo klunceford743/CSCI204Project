@@ -14,6 +14,7 @@ getRefNum, getWordCnt, getLineCnt, getCharCnt, setWordCnt, setLineCnt, and setCh
 
 import DocStream as d
 import DocumentStreamError as ds
+import Sentence as s
 
 class Document:
 
@@ -25,20 +26,44 @@ class Document:
     #all of the attributes are private besides the fileName
     def __init__(self, fileName):
         self.fileName = fileName
+        self.doc = ''
         Document.count += 1
         self.__refNum = Document.count
         self.__sentences = []
         self.__wordCnt = 0
         self.__charCnt = 0
         self.__lineCnt = 0
+        self.author = None
+        self.year = None
+        self.genre = None
 
     #generates a list of sentences from the document, using the
     #readWhole method from the DocumentStream object, this method
     #is then used in the initialization to set the variable
     #self.__sentences
     def generateWhole(self):
-        sent = d.DocumentStream(self.fileName).readWhole()
-        self.__sentences = sent
+        if self.doc == '':
+            listSent = d.DocumentStream(self.fileName).readWhole()
+        else:
+            punctuation = ['.', '!', '?', ';']
+            string = ''
+            listSent = []
+            i = 0
+            text = self.doc
+            while i < len(text):
+                string += text[i]
+                if text[i] in punctuation:
+                    listSent.append(s.Sentence(string))
+                    string = ''
+                elif i > 1 and text[i] == '\n' and text[i-1] == '\n':
+                    listSent.append(s.Sentence(string))
+                    string = ''
+                #adds the last sentence to the list
+                elif i == len(text) - 1:
+                    listSent.append(s.Sentence(string))
+                    break
+                i += 1
+        self.__sentences = listSent
     
     #getter for __sentences
     def getSentences(self):
