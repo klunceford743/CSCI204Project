@@ -6,6 +6,7 @@ import Doc as d
 import SKTree as t
 import datafunctions as f
 import tree as tr
+import SKPCA as p
 
 # predict needs an entry point....
 
@@ -238,6 +239,11 @@ class GUI:
             self.idTop = f.trainTopID(self.fileL)
         elif self.statMethod == '8':
             self.idBottom = f.trainBottomID(self.fileL)
+        elif self.statMethod == '9':
+            data, labels = f.dataPCA(self.fileL)
+            self.pca = p.SKPCA()
+            self.pca.train(data, labels, 2)
+    
 
     def predict(self):
         file = d.Document(self.entered_file)

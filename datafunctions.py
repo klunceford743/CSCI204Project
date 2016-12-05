@@ -163,3 +163,35 @@ def trainBottomID(documents):
     s = tr.DecisionTree()
     s.train(data, labels, 30)
     return s
+
+def dataPCA(documents):
+    data = []
+    labels = []
+    words = []
+    for doc in documents:
+        data.append([doc.author])
+        doc.generateWhole()
+        for sent in doc.getSentences():
+            w = [x.lower() for x in sent.string.split()]
+            words += w
+    stats = b.BasicStats()
+    stats.dic = b.BasicStats.createFreqMap(words)
+    top = stats.topNHeap(50)
+    for x in top:
+        labels.append(x[0])
+    for i in range(len(documents)):
+        wCount = documents[i].getWordCnt()
+        words = []
+        for sent in documents[i].getSentences():
+            w = [y.lower() for y in sent.string.split()]
+            words += w
+        for l in labels:
+            cnt = 0
+            for w in words:
+                if w == l:
+                    cnt += 1
+            ratio = cnt/wCount
+            data[i].append(ratio)
+    return data, labels
+
+

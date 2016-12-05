@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 from sklearn import decomposition
 
-class SKPCA
+class SKPCA:
 
     def __init__(self):
         self.pca_h = None
@@ -28,7 +28,7 @@ class SKPCA
         x = [None]*len(data)
         y = [None]*len(data)
         
-         for row in range(len(data)):
+        for row in range(len(data)):
             y[row] = data[row][0]
             t = []
             for col in range(1,len(data[row])):
@@ -39,6 +39,28 @@ class SKPCA
         self.pca_h = decomposition.PCA(ncomp)
         self.pca_h.fit(x)
         self.X = self.pca_h.transform(x)
+
+
+    def eval(self, data):
+
+        #Strip the first column
+        x = [None]*len(data)
+        y = [None]*len(data)
+        
+         for row in range(len(data)):
+            y[row] = data[row][0]
+            t = []
+            for col in range(1,len(data[row])):
+                t += [data[row][col]]
+            x[row] = t
+
+
+         #2 by number of test authors
+         test = self.pca_h.tranform(x)
+
+         #find distance btween all of test and self.X
+         #Select one with smallest distance
+         return test
 
         
         
