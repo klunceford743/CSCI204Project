@@ -1,8 +1,7 @@
-"""Katie Lunceford
-This is the DocumentStream object. The only attribute is the fileName that
-it uses to read the text from a file.
+"""Katie Lunceford and Jon Li
+This is the DocumentStream object. The attributes are fileName, sents, title, and author
 
-The methods are readWhole and writeWhole.
+The methods are readWhole, writeWhole, and titleInfo.
 """
 import Sentence as s
 import DocumentStreamError as d
