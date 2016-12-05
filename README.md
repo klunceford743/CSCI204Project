@@ -1,6 +1,7 @@
 # CSCI204Project
 Project for 204
-CheckPoint 5
-Katie Lunceford
+Katie Lunceford with Jon Li
+
+User Guide described in FinalWriteUp.doc
 
 
