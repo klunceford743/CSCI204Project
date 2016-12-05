@@ -1,4 +1,4 @@
-""" Katie Lunceford
+""" Katie Lunceford Jon Li
 """
 import codecs
 import string
@@ -11,6 +11,8 @@ class TextFilter:
         self.strings = stringlist
 
     def normalizeWhite(self):
+        '''Take out all the white spaces between words except for one space,
+        meaning that all irregular spaces just becomes one single space'''
         if self.doc[0].isspace():
             s = ' '
         else:
@@ -23,9 +25,11 @@ class TextFilter:
         self.doc = s
 
     def normalizeCase(self):
+        '''makes everything lowercase'''
         self.doc = self.doc.lower()
 
     def stripNull(self):
+        '''strips all characters that aren't in the alphabet'''
         s = ''
         for char in self.doc:
             if ord(char) < 128:
@@ -33,6 +37,7 @@ class TextFilter:
         self.doc = s
 
     def stripNumbers(self):
+        '''strips all the numbers'''
         s = ''
         for char in self.doc:
             if not char.isnumeric():
@@ -41,6 +46,7 @@ class TextFilter:
 
     
     def stripCommon(self):
+        '''strips doc of common 50 words from a doc containing these words'''
         f = open('filterwords.txt', 'r') #open filterwords.tx
         common = f.read().split()
         words = self.doc.split()
@@ -52,6 +58,7 @@ class TextFilter:
                 
 
     def apply(self):
+        '''this is called in other programs to call upon the different filters'''
         for filt in self.strings:
             if filt == 'nw':
                 self.normalizeWhite()
@@ -65,8 +72,3 @@ class TextFilter:
                 self.stripCommon()
             else:
                 print('Not a valid filter.')
-
-
-
-
-            
