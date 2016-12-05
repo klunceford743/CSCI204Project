@@ -5,6 +5,7 @@ from tkinter import *
 import Doc as d
 import SKTree as t
 import datafunctions as f
+import tree as tr
 
 # predict needs an entry point....
 
@@ -28,6 +29,10 @@ class GUI:
         self.skYear = None
         self.skTop = None
         self.skBottom = None
+        self.idGenre = None
+        self.idYear = None
+        self.idTop = None
+        self.idBottom = None
 
 # message Label Text Stuff
 
@@ -83,7 +88,6 @@ class GUI:
         self.trainButton = Button(master,text = "TRAIN", command = lambda: self.training(),bd = 3)
 
         self.PredictButton = Button(master,text="Predict Document",bd=5,command = lambda:self.predict())
-        self.PredictLabel = Label(master,text="Prediction: " + str(self.prediction))
         self.predictEntry = Entry(master)
 
         self.master.bind('<Return>',lambda event:self.update("enter"))
@@ -133,7 +137,7 @@ class GUI:
         
         self.PredictButton.grid(row=22,column=1,stick=W+E)
         self.predictyearEntry.grid(row=21,column=3,stick=W+E)
-        self.PredictLabel.grid(row=23,column=1)
+
 
         self.Documents = Label(master,text="Title                   Genre              Author       Year")
         self.Documents.grid(row=24,column=1)
@@ -223,10 +227,17 @@ class GUI:
         elif self.statMethod == '2':
             self.skYear = f.trainYear(self.fileL)
         elif self.statMethod == '3':
-            self.skTop = f.trainTop(self.fileL)
+            self.idGenre = f.trainGenreID(self.fileL)
         elif self.statMethod == '4':
+            self.idYear = f.trainYearID(self.fileL)
+        elif self.statMethod == '5':
+            self.skTop = f.trainTop(self.fileL)
+        elif self.statMethod == '6':
             self.skBottom = f.trainBottom(self.fileL)
-        return self.skGenre
+        elif self.statMethod == '7':
+            self.idTop = f.trainTopID(self.fileL)
+        elif self.statMethod == '8':
+            self.idBottom = f.trainBottomID(self.fileL)
 
     def predict(self):
         file = d.Document(self.entered_file)
@@ -239,13 +250,25 @@ class GUI:
             data = [[None, f.assignYear(file)]]
             pred = self.skYear.eval(data)
         elif self.statMethod == '3':
+            data = [[None, f.assignGenre(file)]]
+            pred = self.idGenre.evaluate(data)[0]
+        elif self.statMethod == '4':
+            data = [[None, f.assignYear(file)]]
+            pred = self.idYear.evaluate(data)[0]
+        elif self.statMethod == '5':
             data = f.predData(file, self.skTop.labels)
             pred = self.skTop.eval(data)
-        elif self.statMethod == '4':
+        elif self.statMethod == '6':
             data = f.predData(file, self.skBottom.labels)
             pred = self.skBottom.eval(data)
+        elif self.statMethod == '7':
+            data = f.predData(file, self.idTop.columns)
+            pred = self.idTop.evaluate(data)[0]
+        elif self.statMethod == '8':
+            data = f.predData(file, self.idBottom.columns)
+            pred = self.idBottom.evaluate(data)[0]
         self.prediction = pred[0]
-
+        print('The predicted author is: ' + str(self.prediction))
         file.author = pred[0]
         self.fileL.append(file)
         self.text.insert(INSERT,' '*10 + str(file.fileName) + ' '*5 + str(file.genre) + ' '*5 + str(file.author) + ' '*5 + str(file.year) + '\n')

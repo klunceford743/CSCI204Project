@@ -156,41 +156,4 @@ def calculateEntropy(partList):
         totEnt += (len(x)/totLen)*ent
     return totEnt
 
-def generateTests():
-    l = [['no','small','no','average','good'], \
-         ['no','small','no','light','average'],\
-         ['yes','small','yes','average','bad'],\
-         ['yes','medium','no','heavy','bad'], \
-         ['yes','large','no','average','bad'],\
-         ['no','medium','no','light','bad'],\
-         ['no','large','yes','heavy','bad'],\
-         ['no','large','no','heavy','bad'], \
-         ['yes','medium','yes','light','bad'],\
-         ['yes','large','no','average','bad'],\
-         ['no','small','no','light','good'],\
-         ['no','small','no','average','average'],\
-         ['no','medium','no','heavy','bad'],\
-         ['no','small','yes','average','average'],\
-         ['no','medium','no','heavy','bad']]
-    return l
 
-def generatePredicts():
-    l = [[None,'small','no','average','good'], \
-         [None,'small','no','light','average'],\
-         [None,'small','yes','average','bad'],\
-         [None,'medium','no','heavy','bad'], \
-         [None,'large','no','average','bad'],\
-         [None,'medium','no','light','bad'],\
-         [None,'large','yes','heavy','bad'],\
-         [None,'large','no','heavy','bad'], \
-         [None,'medium','yes','light','bad'],\
-         [None,'large','no','average','bad'],\
-         [None,'small','no','light','good'],\
-         [None,'small','no','average','average'],\
-         [None,'medium','no','heavy','bad'],\
-         [None,'small','yes','average','average'],\
-         [None,'medium','no','heavy','bad']]
-    return l
-
-def generateInput():
-    return ['speed','engine','turbo','weight','fueleco']

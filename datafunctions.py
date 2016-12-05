@@ -4,6 +4,7 @@ Formatting data
 import BasicStats as b
 import Doc as d
 import SKTree as t
+import tree as tr
 
 def dataGenre(documents):
     data = []
@@ -139,6 +140,26 @@ def trainBottom(documents):
     s.train(data, labels, 30)
     return s
 
+def trainGenreID(documents):
+    data, labels = dataGenre(documents)
+    s = tr.DecisionTree()
+    s.train(data, labels, 10)
+    return s
 
+def trainYearID(documents):
+    data, labels = dataYear(documents)
+    s = tr.DecisionTree()
+    s.train(data, labels, 10)
+    return s
 
-           
+def trainTopID(documents):
+    data, labels = dataTop(documents)
+    s = tr.DecisionTree()
+    s.train(data, labels, 30)
+    return s
+
+def trainBottomID(documents):
+    data, labels = dataBottom(documents)
+    s = tr.DecisionTree()
+    s.train(data, labels, 30)
+    return s
