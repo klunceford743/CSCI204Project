@@ -1,6 +1,11 @@
-"""This file contains the starting block for decisiontree in scikit
-    You Will need to add functions/methods to convert data into needed format,
-    See treedemo.py
+"""
+Katie Lunceford and Jon Li
+
+This file contains the class for a scikit decision
+tree. The class as the attributes self.tree, self.labels, 
+and self.depth which all start off as None.
+
+The class has the methods train, eval, and toDot.
 """
 
 import pandas as pd
@@ -17,7 +22,11 @@ class SKTree:
         self.depth = None
 
     def train(self, data, labels, depth):
-        """We assume that data is a 2D python list, the target in colum 0"""
+        """
+        Training method that trains a decision tree based off of the
+        given data.
+        We assume that data is a 2D python list, the target in colum 0
+        """
         self.labels = labels
         self.depth = depth
         
@@ -36,7 +45,11 @@ class SKTree:
         self.tree = self.tree.fit(x,y)
 
     def eval(self, data):
-        """We assume that data is a 2D python list, with the target [0] == None"""
+        """
+        Method that evaluates the author for a document once the decision tree has been 
+        trained.
+        We assume that data is a 2D python list, with the target [0] == None
+        """
 
         x = [None]*len(data)
         for row in range(len(data)):
@@ -51,6 +64,9 @@ class SKTree:
 
 
     def toDot(self, filename):
+        """
+        Makes a .dot file with the tree.
+        """
         dot_data = export_graphviz(self.tree, out_file=filename, feature_names=self.labels)
 
 
