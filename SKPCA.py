@@ -6,6 +6,8 @@ attribution. The class has attributes self.pca_h which starts off as
 None, self.ncomp which starts off as 0 but will always be set to 2 when 
 used in our GUI, self.labels which starts off as None (column labels), 
 and self.X which starts off as None (values created by PCA training). 
+
+This class contains the methods train and eval.
 """
 
 import pandas as pd
