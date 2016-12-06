@@ -1,6 +1,11 @@
-"""This file contains the starting block for PCA in scikit
-    You will need to add functions/methods to convert data into needed format,
-    See treedemo.py
+"""
+Katie Lunceford and Jon Li
+
+This file contains the SKPCA class that uses PCA to analyze author
+attribution. The class has attributes self.pca_h which starts off as 
+None, self.ncomp which starts off as 0 but will always be set to 2 when 
+used in our GUI, self.labels which starts off as None (column labels), 
+and self.X which starts off as None (values created by PCA training). 
 """
 
 import pandas as pd
@@ -44,6 +49,20 @@ class SKPCA:
 
 
     def eval(self, data):
+        """
+        used to predict the author of a new document once
+        the pca is trained and built
+        pre: data is a 2d list with one row, the first value 
+        should be None and the other values should be the ratio
+        that a word with the corresponding label index appears in 
+        the document, pca must already be trained so self.pca_h is
+        not None and self.X is not None
+        post: scatter plot of the pca values assigned to each trained 
+        document as well as the predicted document pops up, trained documents'
+        values are in blue and the predicted document's values are in red
+        once scatter plot is closed, returns the index of the trained document
+        that is closest to the predicted document
+        """
 
         #Strip the first column
         x = [None]*len(data)
