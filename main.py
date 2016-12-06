@@ -1,7 +1,12 @@
 """ Katie Lunceford
 This is the main function. It asks for a user input file, converts this
 file into a Document object and uses the text in this Document to create
-a scatter plot of the top 10 most frequently used words in the document
+a scatter plot of the top 10 most frequently used words in the document.
+
+This was used for the checkpoints and is not implemented in the final
+project. The most recently that it was used was to test the different 
+running times between the topN using a dictionary and the topN using
+a heap. Old code used for the command line plotter is commented out
 """
 
 import Doc as d
